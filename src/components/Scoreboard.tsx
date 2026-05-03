@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { PLAYER_1, PLAYER_2, COLORS, PLAYER_NAMES } from '../constants/colors';
+import type { Player } from '../store/gameStore';
 
 interface ScoreboardProps {
   scorePlayer1: number;
   scorePlayer2: number;
+  players: Player[];
 }
 
 const SCOREBOARD_TITLE = 'Puntuaciones';
@@ -39,6 +40,15 @@ function AnimatedScore({
   playerColor: string;
   score: number;
 }) {
+  const prevScoreRef = React.useRef(score);
+
+  React.useEffect(() => {
+    if (score > prevScoreRef.current) {
+      prevScoreRef.current = score;
+    }
+    prevScoreRef.current = score;
+  }, [score]);
+
   return (
     <motion.div
       className="font-bold"
@@ -56,7 +66,7 @@ function AnimatedScore({
   );
 }
 
-export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
+export function Scoreboard({ scorePlayer1, scorePlayer2, players }: ScoreboardProps) {
   const titleLetters = SCOREBOARD_TITLE.split('');
 
   return (
@@ -71,7 +81,7 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
         {titleLetters.map((letter, index) => (
           <motion.span
             key={index}
-            style={{ color: COLORS[(index % 2) + 1], display: 'inline-block' }}
+            style={{ color: index % 2 === 0 ? '#D54117' : '#EBB441', display: 'inline-block' }}
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: index * 0.03, duration: 0.2 }}
@@ -80,30 +90,30 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
           </motion.span>
         ))}
       </motion.h2>
-      {/* Fila del Jugador 1. */}
       <div
         className="flex w-full justify-between items-baseline gap-1"
         style={{ lineHeight: '32px' }}
       >
         <AnimatedPlayerName
-          name={PLAYER_NAMES[PLAYER_1]}
-          playerColor={COLORS[PLAYER_1]}
+          name={players[0]?.name || 'Jugador 1'}
+          playerColor={players[0]?.color || '#D54117'}
           score={scorePlayer1}
         />
-        <AnimatedScore playerColor={COLORS[PLAYER_1]} score={scorePlayer1} />
+        <AnimatedScore playerColor={players[0]?.color || '#D54117'} score={scorePlayer1} />
       </div>
-      {/* Fila del Jugador 2. */}
       <div
         className="flex w-full justify-between items-baseline gap-1"
         style={{ lineHeight: '32px' }}
       >
         <AnimatedPlayerName
-          name={PLAYER_NAMES[PLAYER_2]}
-          playerColor={COLORS[PLAYER_2]}
+          name={players[1]?.name || 'Jugador 2'}
+          playerColor={players[1]?.color || '#EBB441'}
           score={scorePlayer2}
         />
-        <AnimatedScore playerColor={COLORS[PLAYER_2]} score={scorePlayer2} />
+        <AnimatedScore playerColor={players[1]?.color || '#EBB441'} score={scorePlayer2} />
       </div>
     </div>
   );
 }
+
+import React from 'react';

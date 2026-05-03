@@ -1,17 +1,16 @@
-import { motion } from 'framer-motion';
-import { COLORS } from '../constants/colors';
+import { useGameStore } from '../store/gameStore';
 
 interface GameStatusProps {
-  isCurrentPlayerTurn: number;
-  localPlayer: number;
+  currentPlayerId: string;
+  localPlayerId: string | null;
 }
 
 const TURN_MESSAGE = '¡Tu Turno!';
 const WAIT_MESSAGE = 'Espera';
 
-function LoadingDots({ color }: { color: number }) {
+function LoadingDots({ color }: { color: string }) {
   return (
-    <span style={{ color: COLORS[color] }}>
+    <span style={{ color }}>
       {[1, 2, 3].map((n) => (
         <motion.span
           key={n}
@@ -30,14 +29,16 @@ function LoadingDots({ color }: { color: number }) {
   );
 }
 
-export function GameStatus({
-  isCurrentPlayerTurn,
-  localPlayer,
-}: GameStatusProps) {
-  const isMyTurn = isCurrentPlayerTurn === localPlayer;
+import { motion } from 'framer-motion';
+
+export function GameStatus({ currentPlayerId, localPlayerId }: GameStatusProps) {
+  const players = useGameStore((state) => state.players);
+  const isMyTurn = currentPlayerId === localPlayerId;
   const message = isMyTurn ? TURN_MESSAGE : WAIT_MESSAGE;
   const letters = message.split('').map((l) => (l === ' ' ? '\u00A0' : l));
-  const colorIndex = isMyTurn ? localPlayer : localPlayer === 1 ? 2 : 1;
+
+  const currentPlayer = players.find(p => p.id === currentPlayerId);
+  const color = currentPlayer?.color || '#D54117';
 
   return (
     <div className="flex flex-col items-center">
@@ -55,7 +56,7 @@ export function GameStatus({
           return (
             <motion.span
               key={index}
-              style={{ color: COLORS[colorIndex], display: 'inline-block' }}
+              style={{ color, display: 'inline-block' }}
               initial={{ y: 10, opacity: 1 }}
               animate={showJump ? 'jump' : 'visible'}
               variants={{
@@ -85,7 +86,7 @@ export function GameStatus({
             </motion.span>
           );
         })}
-        {!isMyTurn && <LoadingDots color={colorIndex} />}
+        {!isMyTurn && <LoadingDots color={color} />}
       </motion.p>
     </div>
   );

@@ -1,16 +1,11 @@
 import { motion } from 'framer-motion';
-import { COLORS } from '../constants/colors';
 
-/* Props del componente Token. */
 interface TokenProps {
-  // Jugador al que pertenece la ficha (1 o 2).
-  player: number;
+  playerIndex: number;
+  color: string;
 }
 
-/* Componente que representa una ficha del jugador. */
-export function Token({ player }: TokenProps) {
-  const tokenColor = COLORS[player];
-
+export function Token({ color }: TokenProps) {
   return (
     <motion.div
       className="w-full h-full p-4 rounded-full"
@@ -23,7 +18,7 @@ export function Token({ player }: TokenProps) {
         damping: 20,
       }}
       style={{
-        backgroundColor: tokenColor,
+        backgroundColor: color,
         boxShadow: 'inset 0 4px 4px rgba(0, 0, 0, 0.4)',
       }}
     >

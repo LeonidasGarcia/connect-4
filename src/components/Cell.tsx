@@ -1,35 +1,33 @@
-import { PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
 import { Token } from './Token';
+import type { Player } from '../store/gameStore';
 
-/* Propiedades de cada celda individual del tablero. */
+const BOARD_COLORS = ['#C2593C', '#DBB057'];
+
 interface CellProps {
-  // Fila de la celda en el tablero (0-5).
   row: number;
-  // Columna de la celda en el tablero (0-6).
   col: number;
-  // Jugador que ocupa la celda (null si esta vacía).
-  player: number | null;
-  // Jugador con el turno actual.
-  currentPlayer: number;
-  // Callback ejecutado al hacer click en la celda.
+  playerId: string | null;
+  playerIndex: number;
+  currentPlayerIndex: number;
+  players: Player[];
   onClick: (row: number, col: number) => void;
 }
 
-/* Colores alternativos para el fondo del tablero. */
-const BOARD_COLORS: Record<number, string> = {
-  1: PLAYER_1_BOARD,
-  2: PLAYER_2_BOARD,
-};
-
-/* Componente que representa una celda del tablero. */
-export function Cell({ row, col, player, currentPlayer, onClick }: CellProps) {
-  // Verifica si la celda esta vacía.
-  const isEmpty = player === null;
-  // Color alternativo del jugador actual para celdas vacías.
-  const currentColor = BOARD_COLORS[currentPlayer];
+export function Cell({
+  row,
+  col,
+  playerId,
+  playerIndex,
+  currentPlayerIndex,
+  players,
+  onClick,
+}: CellProps) {
+  const isEmpty = playerId === null;
+  const currentColor = BOARD_COLORS[currentPlayerIndex];
+  const player = players[playerIndex];
+  const playerColor = player?.color || '#D54117';
 
   return (
-    // Botón con la celda, cambia de color según si esta vacía o tiene un jugador.
     <button
       className="w-10 h-10 sm:w-16 sm:h-16 p-0.5 sm:p-1 rounded-full transition-colors duration-300"
       style={{
@@ -39,11 +37,10 @@ export function Cell({ row, col, player, currentPlayer, onClick }: CellProps) {
       onClick={() => onClick(row, col)}
       type="button"
     >
-      {/* Si hay un jugador mostrar el Token, si no mostrar la celda vacía. */}
       {isEmpty ? (
         <div className="w-full h-full rounded-full sm:shadow-[inset_0_16px_4px_rgba(0,0,0,0.4)] shadow-[inset_0_8px_4px_rgba(0,0,0,0.4)]" />
       ) : (
-        <Token player={player} />
+        <Token playerIndex={playerIndex} color={playerColor} />
       )}
     </button>
   );
