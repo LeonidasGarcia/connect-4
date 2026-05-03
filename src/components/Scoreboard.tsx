@@ -1,4 +1,3 @@
-import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PLAYER_1, PLAYER_2, COLORS, PLAYER_NAMES } from '../constants/colors';
 
@@ -8,7 +7,6 @@ interface ScoreboardProps {
 }
 
 const SCOREBOARD_TITLE = 'Puntuaciones';
-const GOLD_COLOR = '#FFD700';
 
 function AnimatedPlayerName({
   name,
@@ -19,30 +17,15 @@ function AnimatedPlayerName({
   playerColor: string;
   score: number;
 }) {
-  const prevScore = useRef<number | null>(null);
-  const [flashKey, setFlashKey] = useState(0);
-
-  useEffect(() => {
-    if (prevScore.current !== null && score > prevScore.current) {
-      setFlashKey(k => k + 1);
-    }
-    prevScore.current = score;
-  }, [score]);
-
   return (
     <motion.span
       className="font-semibold"
       style={{ fontSize: '32px', color: playerColor }}
-      key={flashKey}
-      initial={{ scale: 1, color: playerColor }}
       animate={{
-        scale: [1, 1.15, 1],
-        color: [playerColor, GOLD_COLOR, GOLD_COLOR, playerColor],
+        scale: score > 0 ? [1, 1.3, 1] : 1,
+        y: score > 0 ? [0, -5, 0] : 0,
       }}
-      transition={{
-        scale: { type: 'spring', stiffness: 400, damping: 12 },
-        color: { duration: 2 },
-      }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {name}
     </motion.span>
@@ -56,31 +39,17 @@ function AnimatedScore({
   playerColor: string;
   score: number;
 }) {
-  const prevScore = useRef<number | null>(null);
-  const [flashKey, setFlashKey] = useState(0);
-
-  useEffect(() => {
-    if (prevScore.current !== null && score > prevScore.current) {
-      setFlashKey(k => k + 1);
-    }
-    prevScore.current = score;
-  }, [score]);
-
   return (
     <motion.div
       className="font-bold"
       style={{ fontSize: '32px', color: playerColor }}
-      key={flashKey}
-      initial={{ scale: 0, rotate: -15, color: playerColor }}
+      key={score}
+      initial={{ scale: 0, rotate: -20 }}
       animate={{
-        scale: 1,
-        rotate: 0,
-        color: [playerColor, GOLD_COLOR, GOLD_COLOR, playerColor],
+        scale: [1.3, 1],
+        rotate: [20, 0],
       }}
-      transition={{
-        scale: { type: 'spring', stiffness: 400, damping: 12 },
-        color: { duration: 2 },
-      }}
+      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
     >
       {score}
     </motion.div>
