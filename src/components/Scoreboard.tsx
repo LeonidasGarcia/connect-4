@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { PLAYER_1, PLAYER_2, COLORS, PLAYER_NAMES } from '../constants/colors';
 
 /* Props del componente Scoreboard. */
@@ -35,12 +36,16 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
         >
           {PLAYER_NAMES[PLAYER_1]}
         </span>
-        <span
+        <motion.span
           className="font-bold"
           style={{ color: COLORS[PLAYER_1], fontSize: '32px' }}
+          key={scorePlayer1}
+          initial={{ scale: 1.3 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 15 }}
         >
           {scorePlayer1}
-        </span>
+        </motion.span>
       </div>
       {/* Fila del Jugador 2. */}
       <div
@@ -53,12 +58,16 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
         >
           {PLAYER_NAMES[PLAYER_2]}
         </span>
-        <span
+        <motion.span
           className="font-bold"
           style={{ color: COLORS[PLAYER_2], fontSize: '32px' }}
+          key={scorePlayer2}
+          initial={{ scale: 1.3 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 15 }}
         >
           {scorePlayer2}
-        </span>
+        </motion.span>
       </div>
     </div>
   );

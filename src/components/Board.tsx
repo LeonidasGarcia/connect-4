@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
 import { Column } from './Column';
 import { useGameStore } from '../store/gameStore';
@@ -61,19 +62,36 @@ export function Board({ currentPlayer }: BoardProps) {
   };
 
   return (
-    // Contenedor exterior del tablero con padding y sombra proyectada.
-    <div
-      className="p-1 rounded-2xl sm:rounded-3xl transition-colors duration-300"
-      style={{
+    <motion.div
+      className="p-1 rounded-2xl sm:rounded-3xl"
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
         backgroundColor: currentColor,
+      }}
+      transition={{
+        duration: 0.5,
+        ease: 'easeOut',
+      }}
+      style={{
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
       }}
     >
       {/* Contenedor interno del tablero con sombra interna. */}
-      <div
+      <motion.div
         className="p-4 rounded-2xl sm:rounded-3xl"
-        style={{
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
           backgroundColor: currentColor,
+        }}
+        transition={{
+          duration: 0.5,
+          ease: 'easeOut',
+        }}
+        style={{
           boxShadow:
             'inset 4px 4px 4px rgba(0, 0, 0, 0.4), inset -4px -4px 4px rgba(0, 0, 0, 0.4)',
         }}
@@ -92,7 +110,7 @@ export function Board({ currentPlayer }: BoardProps) {
             />
           ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
