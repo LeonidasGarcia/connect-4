@@ -11,7 +11,7 @@ export function GameTitle() {
   return (
     <motion.h1
       className="font-bold"
-      style={{ fontSize: '104px' }}
+      style={{ fontSize: '104px', lineHeight: 1 }}
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
