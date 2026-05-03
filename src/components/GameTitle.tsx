@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { COLORS } from '../constants/colors';
 
 /* Titulo del juego con colores intercalados entre los jugadores. */
@@ -8,12 +9,29 @@ export function GameTitle() {
   const letters = TITLE.split('');
 
   return (
-    <h1 className="font-bold" style={{ fontSize: '104px' }}>
+    <motion.h1
+      className="font-bold"
+      style={{ fontSize: '104px' }}
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+    >
       {letters.map((letter, index) => (
-        <span key={index} style={{ color: COLORS[(index % 2) + 1] }}>
+        <motion.span
+          key={index}
+          style={{ color: COLORS[(index % 2) + 1], display: 'inline-block' }}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{
+            delay: index * 0.03,
+            type: 'spring',
+            stiffness: 300,
+            damping: 15,
+          }}
+        >
           {letter}
-        </span>
+        </motion.span>
       ))}
-    </h1>
+    </motion.h1>
   );
 }
