@@ -14,13 +14,34 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 gap-6"
+      className="min-h-screen flex items-center justify-center p-4"
       style={{ backgroundColor: '#323232' }}
     >
-      <GameTitle />
-      <Scoreboard scorePlayer1={scorePlayer1} scorePlayer2={scorePlayer2} />
-      <GameStatus isCurrentPlayerTurn={currentPlayer} localPlayer={localPlayer} />
-      <Board currentPlayer={currentPlayer} />
+      {/* Contenedor principal con flex-col para organizar todo el contenido. */}
+      <div className="flex flex-col items-center gap-8">
+        {/* Titulo del juego en la parte superior. */}
+        <GameTitle />
+
+        {/* Contenedor inferior con Board a la izquierda y componentes a la derecha. */}
+        <div className="flex flex-row items-stretch gap-8 md:gap-24">
+          {/* Board a la izquierda. */}
+          <Board currentPlayer={currentPlayer} />
+
+          {/* Contenedor derecho: Scoreboard y GameStatus. */}
+          <div className="flex flex-col flex-1">
+            <Scoreboard
+              scorePlayer1={scorePlayer1}
+              scorePlayer2={scorePlayer2}
+            />
+            <div className="flex flex-1 justify-center items-center">
+              <GameStatus
+                isCurrentPlayerTurn={currentPlayer}
+                localPlayer={localPlayer}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

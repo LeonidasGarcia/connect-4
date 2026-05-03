@@ -25,7 +25,7 @@ export function GameStatus({
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-lg sm:text-xl font-bold">
+      <p className="text-lg sm:text-5xl font-bold">
         {letters.map((letter, index) => (
           <span key={index} style={{ color: COLORS[colorIndex] }}>
             {letter}

@@ -24,37 +24,35 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
           </span>
         ))}
       </h2>
-      <div className="flex gap-8">
-        {/* Fila del Jugador 1. */}
-        <div className="flex flex-col items-center gap-1">
-          <span
-            className="text-lg sm:text-xl font-semibold"
-            style={{ color: COLORS[PLAYER_1] }}
-          >
-            {PLAYER_NAMES[PLAYER_1]}
-          </span>
-          <span
-            className="text-2xl sm:text-3xl font-bold"
-            style={{ color: COLORS[PLAYER_1] }}
-          >
-            {scorePlayer1}
-          </span>
-        </div>
-        {/* Fila del Jugador 2. */}
-        <div className="flex flex-col items-center gap-1">
-          <span
-            className="text-lg sm:text-xl font-semibold"
-            style={{ color: COLORS[PLAYER_2] }}
-          >
-            {PLAYER_NAMES[PLAYER_2]}
-          </span>
-          <span
-            className="text-2xl sm:text-3xl font-bold"
-            style={{ color: COLORS[PLAYER_2] }}
-          >
-            {scorePlayer2}
-          </span>
-        </div>
+      {/* Fila del Jugador 1. */}
+      <div className="flex w-full justify-between items-baseline gap-1">
+        <span
+          className="text-lg sm:text-xl font-semibold"
+          style={{ color: COLORS[PLAYER_1] }}
+        >
+          {PLAYER_NAMES[PLAYER_1]}
+        </span>
+        <span
+          className="text-2xl sm:text-3xl font-bold"
+          style={{ color: COLORS[PLAYER_1] }}
+        >
+          {scorePlayer1}
+        </span>
+      </div>
+      {/* Fila del Jugador 2. */}
+      <div className="flex w-full justify-between items-baseline gap-1">
+        <span
+          className="text-lg sm:text-xl font-semibold"
+          style={{ color: COLORS[PLAYER_2] }}
+        >
+          {PLAYER_NAMES[PLAYER_2]}
+        </span>
+        <span
+          className="text-2xl sm:text-3xl font-bold"
+          style={{ color: COLORS[PLAYER_2] }}
+        >
+          {scorePlayer2}
+        </span>
       </div>
     </div>
   );
