@@ -16,8 +16,8 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
   const titleLetters = SCOREBOARD_TITLE.split('');
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <h2 className="text-xl sm:text-2xl font-bold mb-2">
+    <div className="flex flex-col items-center gap-4">
+      <h2 className="font-bold" style={{ fontSize: '64px' }}>
         {titleLetters.map((letter, index) => (
           <span key={index} style={{ color: COLORS[(index % 2) + 1] }}>
             {letter}
@@ -25,31 +25,37 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
         ))}
       </h2>
       {/* Fila del Jugador 1. */}
-      <div className="flex w-full justify-between items-baseline gap-1">
+      <div
+        className="flex w-full justify-between items-baseline gap-1"
+        style={{ lineHeight: '32px' }}
+      >
         <span
-          className="text-lg sm:text-xl font-semibold"
-          style={{ color: COLORS[PLAYER_1] }}
+          className="font-semibold"
+          style={{ color: COLORS[PLAYER_1], fontSize: '32px' }}
         >
           {PLAYER_NAMES[PLAYER_1]}
         </span>
         <span
-          className="text-2xl sm:text-3xl font-bold"
-          style={{ color: COLORS[PLAYER_1] }}
+          className="font-bold"
+          style={{ color: COLORS[PLAYER_1], fontSize: '32px' }}
         >
           {scorePlayer1}
         </span>
       </div>
       {/* Fila del Jugador 2. */}
-      <div className="flex w-full justify-between items-baseline gap-1">
+      <div
+        className="flex w-full justify-between items-baseline gap-1"
+        style={{ lineHeight: '32px' }}
+      >
         <span
-          className="text-lg sm:text-xl font-semibold"
-          style={{ color: COLORS[PLAYER_2] }}
+          className="font-semibold"
+          style={{ color: COLORS[PLAYER_2], fontSize: '32px' }}
         >
           {PLAYER_NAMES[PLAYER_2]}
         </span>
         <span
-          className="text-2xl sm:text-3xl font-bold"
-          style={{ color: COLORS[PLAYER_2] }}
+          className="font-bold"
+          style={{ color: COLORS[PLAYER_2], fontSize: '32px' }}
         >
           {scorePlayer2}
         </span>

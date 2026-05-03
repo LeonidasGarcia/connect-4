@@ -8,7 +8,7 @@ export function GameTitle() {
   const letters = TITLE.split('');
 
   return (
-    <h1 className="text-3xl sm:text-5xl font-bold">
+    <h1 className="font-bold" style={{ fontSize: '104px' }}>
       {letters.map((letter, index) => (
         <span key={index} style={{ color: COLORS[(index % 2) + 1] }}>
           {letter}

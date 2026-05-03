@@ -14,11 +14,11 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-4"
+      className="min-h-screen flex items-center justify-center p-4 font-jersey"
       style={{ backgroundColor: '#323232' }}
     >
       {/* Contenedor principal con flex-col para organizar todo el contenido. */}
-      <div className="flex flex-col items-center gap-16">
+      <div className="flex flex-col items-center gap-6">
         {/* Titulo del juego en la parte superior. */}
         <GameTitle />
 
