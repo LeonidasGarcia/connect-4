@@ -9,8 +9,9 @@
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development server |
-| `npm run build` | Build for production (runs typecheck first) |
+| `npm run build` | Build for production (runs `tsc -b` typecheck first) |
 | `npm run lint` | Run ESLint |
+| `npm run preview` | Preview production build locally |
 
 ## Project Structure
 
@@ -41,3 +42,9 @@ src/
 
 ## Build Verification
 Always run `npm run build` before finishing - it runs TypeScript typechecking + Vite build.
+
+## Multiplayer (WebSocket)
+
+The game has mock data in `gameStore.ts`. Real multiplayer requires Socket.IO integration:
+- See `WEBSOCKET_SERVER_GUIDE.md` for the server protocol contract
+- Client needs to connect to `ws://localhost:3000`, emit `join_room` and `make_move`, handle `game_state`, `player_id`, `error` events
