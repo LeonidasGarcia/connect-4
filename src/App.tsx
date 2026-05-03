@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Board } from './components/Board';
 import { GameTitle } from './components/GameTitle';
 import { Scoreboard } from './components/Scoreboard';
@@ -9,6 +10,16 @@ export default function App() {
   const scores = useGameStore((state) => state.scores);
   const players = useGameStore((state) => state.players);
   const localPlayerId = useGameStore((state) => state.localPlayerId);
+  const connect = useGameStore((state) => state.connect);
+  const disconnect = useGameStore((state) => state.disconnect);
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
 
   const player1Score = players[0] ? scores[players[0].id] || 0 : 0;
   const player2Score = players[1] ? scores[players[1].id] || 0 : 0;

@@ -2,14 +2,12 @@ import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { Column } from './Column';
 
-interface BoardProps {}
-
 const COLS = 7;
 
 const BOARD_COLORS = ['#C2593C', '#DBB057'];
 
-export function Board({}: BoardProps) {
-  const board = useGameStore((state) => state.board);
+export function Board() {
+  const tokens = useGameStore((state) => state.tokens);
   const currentPlayerId = useGameStore((state) => state.currentPlayerId);
   const players = useGameStore((state) => state.players);
   const makeMove = useGameStore((state) => state.makeMove);
@@ -56,7 +54,7 @@ export function Board({}: BoardProps) {
             <Column
               key={col}
               col={col}
-              board={board}
+              tokens={tokens}
               players={players}
               currentPlayerId={currentPlayerId}
               onColumnClick={makeMove}

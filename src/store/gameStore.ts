@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { io, Socket } from 'socket.io-client';
 
 export interface Player {
   id: string;
@@ -6,88 +7,110 @@ export interface Player {
   name: string;
 }
 
-export type Board = (string | null)[][];
+export interface TokenSets {
+  player1: Set<string>;
+  player2: Set<string>;
+}
 
 interface GameState {
   players: Player[];
   currentPlayerId: string;
-  board: Board;
+  tokens: TokenSets;
   scores: Record<string, number>;
   localPlayerId: string | null;
   connected: boolean;
   roomId: string | null;
   error: string | null;
 
-  connect: (roomId: string) => void;
+  connect: () => void;
   disconnect: () => void;
   makeMove: (col: number) => void;
 }
 
-const ROWS = 6;
-const COLS = 7;
+const SERVER_URL = 'http://localhost:3000';
 
-function createEmptyBoard(): Board {
-  return Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+function createEmptyTokens(): TokenSets {
+  return {
+    player1: new Set<string>(),
+    player2: new Set<string>(),
+  };
 }
 
-const mockPlayers: Player[] = [
-  { id: 'player1', color: '#D54117', name: 'Jugador 1' },
-  { id: 'player2', color: '#EBB441', name: 'Jugador 2' },
-];
+let socket: Socket | null = null;
 
-const mockBoard: Board = createEmptyBoard();
-const mockScores: Record<string, number> = {
-  player1: 0,
-  player2: 0,
-};
-
-export const useGameStore = create<GameState>((set, get) => ({
-  players: mockPlayers,
-  currentPlayerId: mockPlayers[0].id,
-  board: mockBoard,
-  scores: mockScores,
-  localPlayerId: 'player1',
+export const useGameStore = create<GameState>((set) => ({
+  players: [],
+  currentPlayerId: '',
+  tokens: createEmptyTokens(),
+  scores: {},
+  localPlayerId: null,
   connected: false,
   roomId: null,
   error: null,
 
-  connect: (roomId: string) => {
-    set({ roomId, connected: true, error: null });
-  },
+  connect: () => {
+    if (socket?.connected) return;
 
-  disconnect: () => {
-    set({
-      connected: false,
-      roomId: null,
-      board: createEmptyBoard(),
-      scores: { player1: 0, player2: 0 },
+    socket = io(SERVER_URL);
+
+    socket.on('connect', () => {
+      set({ connected: true, error: null });
+      socket?.emit('joinRoom');
+    });
+
+    socket.on('disconnect', () => {
+      set({
+        connected: false,
+        localPlayerId: null,
+        players: [],
+        tokens: createEmptyTokens(),
+        scores: {},
+      });
+    });
+
+    socket.on('playerIdAssigned', (data: { id: string }) => {
+      set({ localPlayerId: data.id });
+    });
+
+    socket.on('gameStateChanged', (data: GameStateFromServer) => {
+      set({
+        players: data.players,
+        currentPlayerId: data.currentPlayerId,
+        tokens: {
+          player1: new Set(data.tokens.player1),
+          player2: new Set(data.tokens.player2),
+        },
+        scores: data.scores,
+      });
+    });
+
+    socket.on('errorOccurred', (data: { message: string }) => {
+      set({ error: data.message });
     });
   },
 
-  // TODO: Replace with WebSocket call to server
-  // When connected to server, makeMove should emit 'make_move' event
-  // and let the server handle: gravity, turn switching, win detection, scoring
+  disconnect: () => {
+    socket?.disconnect();
+    socket = null;
+    set({
+      connected: false,
+      localPlayerId: null,
+      players: [],
+      tokens: createEmptyTokens(),
+      scores: {},
+      roomId: null,
+      error: null,
+    });
+  },
+
   makeMove: (col: number) => {
-    const { board, currentPlayerId } = get();
-
-    for (let row = ROWS - 1; row >= 0; row--) {
-      if (board[row][col] === null) {
-        const newBoard = board.map((r) => [...r]);
-        newBoard[row][col] = currentPlayerId;
-
-        const newScores = { ...get().scores };
-        newScores[currentPlayerId] = newScores[currentPlayerId] || 0;
-
-        const { players } = get();
-        const nextPlayer = players.find((p) => p.id !== currentPlayerId);
-
-        set({
-          board: newBoard,
-          scores: newScores,
-          currentPlayerId: nextPlayer?.id || currentPlayerId,
-        });
-        break;
-      }
-    }
+    socket?.emit('makeMove', { col });
   },
 }));
+
+interface GameStateFromServer {
+  players: Player[];
+  currentPlayerId: string;
+  scores: Record<string, number>;
+  tokens: { player1: string[]; player2: string[] };
+}

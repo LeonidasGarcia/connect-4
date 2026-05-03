@@ -1,9 +1,9 @@
-import type { Board, Player } from '../store/gameStore';
+import type { Player, TokenSets } from '../store/gameStore';
 import { Cell } from './Cell';
 
 interface ColumnProps {
   col: number;
-  board: Board;
+  tokens: TokenSets;
   players: Player[];
   currentPlayerId: string;
   onColumnClick: (col: number) => void;
@@ -13,12 +13,26 @@ const ROWS = 6;
 
 export function Column({
   col,
-  board,
+  tokens,
   players,
   currentPlayerId,
   onColumnClick,
 }: ColumnProps) {
   const currentPlayerIndex = players.findIndex(p => p.id === currentPlayerId);
+
+  function getPlayerIdAt(row: number): string | null {
+    const coord = `${col},${row}`;
+
+    if (tokens.player1.has(coord)) {
+      return players[0]?.id ?? null;
+    }
+
+    if (tokens.player2.has(coord)) {
+      return players[1]?.id ?? null;
+    }
+
+    return null;
+  }
 
   return (
     <button
@@ -27,7 +41,7 @@ export function Column({
       type="button"
     >
       {Array.from({ length: ROWS }).map((_, row) => {
-        const playerId = board[row][col];
+        const playerId = getPlayerIdAt(row);
         const player = players.find(p => p.id === playerId);
         const playerIndex = player ? players.findIndex(p => p.id === playerId) : -1;
 
