@@ -18,7 +18,7 @@ export default function App() {
       style={{ backgroundColor: '#323232' }}
     >
       {/* Contenedor principal con flex-col para organizar todo el contenido. */}
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-16">
         {/* Titulo del juego en la parte superior. */}
         <GameTitle />
 
