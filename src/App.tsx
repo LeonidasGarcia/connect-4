@@ -1,14 +1,16 @@
-import { useState } from 'react';
 import { PLAYER_1 } from './constants/colors';
 import { Board } from './components/Board';
 import { GameTitle } from './components/GameTitle';
 import { Scoreboard } from './components/Scoreboard';
 import { GameStatus } from './components/GameStatus';
+import { useGameStore } from './store/gameStore';
 
 export default function App() {
-  const [currentPlayer] = useState(PLAYER_1);
-  const [scorePlayer1] = useState(0);
-  const [scorePlayer2] = useState(0);
+  // Obtiene el jugador actual desde la store.
+  const currentPlayer = useGameStore((state) => state.currentPlayer);
+  // Obtiene las puntuaciones desde la store.
+  const player1Score = useGameStore((state) => state.player1Score);
+  const player2Score = useGameStore((state) => state.player2Score);
   // Jugador local (simulado como Player 1).
   const localPlayer = PLAYER_1;
 
@@ -30,8 +32,8 @@ export default function App() {
           {/* Contenedor derecho: Scoreboard y GameStatus. */}
           <div className="flex flex-col flex-1">
             <Scoreboard
-              scorePlayer1={scorePlayer1}
-              scorePlayer2={scorePlayer2}
+              scorePlayer1={player1Score}
+              scorePlayer2={player2Score}
             />
             <div className="flex flex-1 justify-center items-center">
               <GameStatus

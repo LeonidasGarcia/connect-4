@@ -1,5 +1,7 @@
 import { PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
-import { Cell } from './Cell';
+import { Column } from './Column';
+import { useGameStore } from '../store/gameStore';
+import { arrayToKey } from '../utils/coordinates';
 
 // Propiedades que recibe el componente Board desde su padre.
 interface BoardProps {
@@ -18,12 +20,44 @@ const BOARD_COLORS: Record<number, string> = {
 };
 
 export function Board({ currentPlayer }: BoardProps) {
+  // Obtiene los tokens de cada jugador desde la store.
+  const player1Tokens = useGameStore((state) => state.player1Tokens);
+  const player2Tokens = useGameStore((state) => state.player2Tokens);
+  // Obtiene la función para añadir token desde la store.
+  const addToken = useGameStore((state) => state.addToken);
+  // Obtiene la función para cambiar turno desde la store.
+  const switchTurn = useGameStore((state) => state.switchTurn);
+
   // Color del jugador actual, usado para el fondo del tablero.
   const currentColor = BOARD_COLORS[currentPlayer];
 
-  const handleCellClick = (row: number, col: number) => {
-    // Evento para reaccionar al click del jugador con turno actual.
-    console.log(`Columna: ${col}, Fila: ${row}`);
+  // Calcula la fila más baja disponible en una columna (lógica de gravedad).
+  const getLowestEmptyRow = (col: number): number | null => {
+    // Busca desde la última fila (5) hacia arriba (0).
+    for (let row = ROWS - 1; row >= 0; row--) {
+      const key = arrayToKey([col, row]);
+      if (!player1Tokens.has(key) && !player2Tokens.has(key)) {
+        return row;
+      }
+    }
+    // Si la columna está llena, retorna null.
+    return null;
+  };
+
+  // Maneja el click en una columna (la ficha cae por gravedad).
+  const handleColumnClick = (col: number) => {
+    // Calcula la fila más baja disponible en esta columna.
+    const lowestRow = getLowestEmptyRow(col);
+
+    // Si la columna está llena, no hace nada.
+    if (lowestRow === null) {
+      return;
+    }
+
+    // Añade el token en la fila más baja disponible.
+    addToken(col, lowestRow);
+    // Cambia el turno.
+    switchTurn();
   };
 
   return (
@@ -44,21 +78,19 @@ export function Board({ currentPlayer }: BoardProps) {
             'inset 4px 4px 4px rgba(0, 0, 0, 0.4), inset -4px -4px 4px rgba(0, 0, 0, 0.4)',
         }}
       >
-        {/* Grid de 7 columnas y 6 filas con las celdas. */}
-        <div className="grid grid-cols-7 grid-rows-6 grid-flow-col gap-4">
-          {/* Ninguna celda esta atada a un estado en especifico, solo escuchan eventos */}
-          {Array.from({ length: COLS }).map((_, col) =>
-            Array.from({ length: ROWS }).map((_, row) => (
-              <Cell
-                key={`${row}-${col}`}
-                row={row}
-                col={col}
-                player={null}
-                currentPlayer={currentPlayer}
-                onClick={handleCellClick}
-              />
-            )),
-          )}
+        {/* Grid de 7 columnas clickeables. */}
+        <div className="flex gap-4">
+          {/* Renderiza las columnas del tablero */}
+          {Array.from({ length: COLS }).map((_, col) => (
+            <Column
+              key={col}
+              col={col}
+              player1Tokens={player1Tokens}
+              player2Tokens={player2Tokens}
+              currentPlayer={currentPlayer}
+              onColumnClick={handleColumnClick}
+            />
+          ))}
         </div>
       </div>
     </div>
