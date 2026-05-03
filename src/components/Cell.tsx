@@ -1,4 +1,5 @@
-import { COLORS, PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
+import { PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
+import { Token } from './Token';
 
 /* Propiedades de cada celda individual del tablero. */
 interface CellProps {
@@ -24,8 +25,6 @@ const BOARD_COLORS: Record<number, string> = {
 export function Cell({ row, col, player, currentPlayer, onClick }: CellProps) {
   // Verifica si la celda esta vacía.
   const isEmpty = player === null;
-  // Color del jugador que ocupa la celda (si hay uno).
-  const playerColor = player ? COLORS[player] : undefined;
   // Color alternativo del jugador actual para celdas vacías.
   const currentColor = BOARD_COLORS[currentPlayer];
 
@@ -34,14 +33,18 @@ export function Cell({ row, col, player, currentPlayer, onClick }: CellProps) {
     <button
       className="w-10 h-10 sm:w-16 sm:h-16 p-0.5 sm:p-1 rounded-full transition-colors duration-300"
       style={{
-        backgroundColor: isEmpty ? currentColor : playerColor,
+        backgroundColor: isEmpty ? currentColor : 'transparent',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
       }}
       onClick={() => onClick(row, col)}
       type="button"
     >
-      {/* Círculo interior con sombra para efecto 3D. */}
-      <div className="w-full h-full rounded-full sm:shadow-[inset_0_16px_4px_rgba(0,0,0,0.4)] shadow-[inset_0_8px_4px_rgba(0,0,0,0.4)]" />
+      {/* Si hay un jugador mostrar el Token, si no mostrar la celda vacía. */}
+      {isEmpty ? (
+        <div className="w-full h-full rounded-full sm:shadow-[inset_0_16px_4px_rgba(0,0,0,0.4)] shadow-[inset_0_8px_4px_rgba(0,0,0,0.4)]" />
+      ) : (
+        <Token player={player} />
+      )}
     </button>
   );
 }
