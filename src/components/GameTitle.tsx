@@ -6,7 +6,7 @@ const TITLE = '¡Conecta 4!';
 
 /* Componente que renderiza el titulo con colores alternados. */
 export function GameTitle() {
-  const letters = TITLE.split('');
+  const letters = TITLE.split('').map(l => l === ' ' ? '\u00A0' : l);
 
   return (
     <motion.h1
