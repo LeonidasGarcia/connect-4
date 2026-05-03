@@ -18,10 +18,11 @@ export function Token({ player }: TokenProps) {
         boxShadow: 'inset 0 4px 4px rgba(0, 0, 0, 0.4)',
       }}
     >
-<div
+      <div
         className="w-full h-full rounded-full"
         style={{
-          boxShadow: 'inset 0 4px 2px rgba(0, 0, 0, 0.4), 0 0 2px rgba(0, 0, 0, 0.2)',
+          boxShadow:
+            'inset 0 4px 2px rgba(0, 0, 0, 0.4), 0 0 2px rgba(0, 0, 0, 0.2)',
         }}
       />
     </div>
