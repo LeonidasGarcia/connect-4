@@ -1,13 +1,91 @@
+import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PLAYER_1, PLAYER_2, COLORS, PLAYER_NAMES } from '../constants/colors';
 
-/* Props del componente Scoreboard. */
 interface ScoreboardProps {
   scorePlayer1: number;
   scorePlayer2: number;
 }
 
 const SCOREBOARD_TITLE = 'Puntuaciones';
+const GOLD_COLOR = '#FFD700';
+
+function AnimatedPlayerName({
+  name,
+  playerColor,
+  score,
+}: {
+  name: string;
+  playerColor: string;
+  score: number;
+}) {
+  const prevScore = useRef<number | null>(null);
+  const [flashKey, setFlashKey] = useState(0);
+
+  useEffect(() => {
+    if (prevScore.current !== null && score > prevScore.current) {
+      setFlashKey(k => k + 1);
+    }
+    prevScore.current = score;
+  }, [score]);
+
+  return (
+    <motion.span
+      className="font-semibold"
+      style={{ fontSize: '32px', color: playerColor }}
+      key={flashKey}
+      initial={{ scale: 1, color: playerColor }}
+      animate={{
+        scale: [1, 1.15, 1],
+        color: [playerColor, GOLD_COLOR, GOLD_COLOR, playerColor],
+      }}
+      transition={{
+        scale: { type: 'spring', stiffness: 400, damping: 12 },
+        color: { duration: 2 },
+      }}
+    >
+      {name}
+    </motion.span>
+  );
+}
+
+function AnimatedScore({
+  playerColor,
+  score,
+}: {
+  playerColor: string;
+  score: number;
+}) {
+  const prevScore = useRef<number | null>(null);
+  const [flashKey, setFlashKey] = useState(0);
+
+  useEffect(() => {
+    if (prevScore.current !== null && score > prevScore.current) {
+      setFlashKey(k => k + 1);
+    }
+    prevScore.current = score;
+  }, [score]);
+
+  return (
+    <motion.div
+      className="font-bold"
+      style={{ fontSize: '32px', color: playerColor }}
+      key={flashKey}
+      initial={{ scale: 0, rotate: -15, color: playerColor }}
+      animate={{
+        scale: 1,
+        rotate: 0,
+        color: [playerColor, GOLD_COLOR, GOLD_COLOR, playerColor],
+      }}
+      transition={{
+        scale: { type: 'spring', stiffness: 400, damping: 12 },
+        color: { duration: 2 },
+      }}
+    >
+      {score}
+    </motion.div>
+  );
+}
 
 export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
   const titleLetters = SCOREBOARD_TITLE.split('');
@@ -38,44 +116,24 @@ export function Scoreboard({ scorePlayer1, scorePlayer2 }: ScoreboardProps) {
         className="flex w-full justify-between items-baseline gap-1"
         style={{ lineHeight: '32px' }}
       >
-        <span
-          className="font-semibold"
-          style={{ color: COLORS[PLAYER_1], fontSize: '32px' }}
-        >
-          {PLAYER_NAMES[PLAYER_1]}
-        </span>
-        <motion.div
-          className="font-bold"
-          style={{ color: COLORS[PLAYER_1], fontSize: '32px' }}
-          key={scorePlayer1}
-          initial={{ scale: 0, rotate: -15 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-        >
-          {scorePlayer1}
-        </motion.div>
+        <AnimatedPlayerName
+          name={PLAYER_NAMES[PLAYER_1]}
+          playerColor={COLORS[PLAYER_1]}
+          score={scorePlayer1}
+        />
+        <AnimatedScore playerColor={COLORS[PLAYER_1]} score={scorePlayer1} />
       </div>
       {/* Fila del Jugador 2. */}
       <div
         className="flex w-full justify-between items-baseline gap-1"
         style={{ lineHeight: '32px' }}
       >
-        <span
-          className="font-semibold"
-          style={{ color: COLORS[PLAYER_2], fontSize: '32px' }}
-        >
-          {PLAYER_NAMES[PLAYER_2]}
-        </span>
-        <motion.div
-          className="font-bold"
-          style={{ color: COLORS[PLAYER_2], fontSize: '32px' }}
-          key={scorePlayer2}
-          initial={{ scale: 0, rotate: -15 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-        >
-          {scorePlayer2}
-        </motion.div>
+        <AnimatedPlayerName
+          name={PLAYER_NAMES[PLAYER_2]}
+          playerColor={COLORS[PLAYER_2]}
+          score={scorePlayer2}
+        />
+        <AnimatedScore playerColor={COLORS[PLAYER_2]} score={scorePlayer2} />
       </div>
     </div>
   );
