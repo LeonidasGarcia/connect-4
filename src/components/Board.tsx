@@ -1,4 +1,4 @@
-import { COLORS } from '../constants/colors';
+import { PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
 import { Cell } from './Cell';
 
 // Propiedades que recibe el componente Board desde su padre.
@@ -11,9 +11,15 @@ interface BoardProps {
 const ROWS = 6;
 const COLS = 7;
 
+// Colores alternativos para el fondo del tablero segun el jugador.
+const BOARD_COLORS: Record<number, string> = {
+  1: PLAYER_1_BOARD,
+  2: PLAYER_2_BOARD,
+};
+
 export function Board({ currentPlayer }: BoardProps) {
   // Color del jugador actual, usado para el fondo del tablero.
-  const currentColor = COLORS[currentPlayer];
+  const currentColor = BOARD_COLORS[currentPlayer];
 
   const handleCellClick = (row: number, col: number) => {
     // Evento para reaccionar al click del jugador con turno actual.

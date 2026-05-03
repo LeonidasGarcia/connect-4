@@ -1,4 +1,4 @@
-import { COLORS } from '../constants/colors';
+import { COLORS, PLAYER_1_BOARD, PLAYER_2_BOARD } from '../constants/colors';
 
 /* Propiedades de cada celda individual del tablero. */
 interface CellProps {
@@ -14,14 +14,20 @@ interface CellProps {
   onClick: (row: number, col: number) => void;
 }
 
+/* Colores alternativos para el fondo del tablero. */
+const BOARD_COLORS: Record<number, string> = {
+  1: PLAYER_1_BOARD,
+  2: PLAYER_2_BOARD,
+};
+
 /* Componente que representa una celda del tablero. */
 export function Cell({ row, col, player, currentPlayer, onClick }: CellProps) {
   // Verifica si la celda esta vacía.
   const isEmpty = player === null;
   // Color del jugador que ocupa la celda (si hay uno).
   const playerColor = player ? COLORS[player] : undefined;
-  // Color del jugador actual para celdas vacías.
-  const currentColor = COLORS[currentPlayer];
+  // Color alternativo del jugador actual para celdas vacías.
+  const currentColor = BOARD_COLORS[currentPlayer];
 
   return (
     // Botón con la celda, cambia de color según si esta vacía o tiene un jugador.

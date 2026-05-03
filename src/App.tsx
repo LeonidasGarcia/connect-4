@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PLAYER_2 } from './constants/colors';
+import { PLAYER_1, PLAYER_2 } from './constants/colors';
 import { Board } from './components/Board';
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center p-4"
-      style={{ backgroundColor: '#1a1a2e' }}
+      style={{ backgroundColor: '#323232' }}
     >
       <Board currentPlayer={currentPlayer} />
     </div>

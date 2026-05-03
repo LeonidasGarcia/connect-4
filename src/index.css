@@ -1,10 +1,5 @@
 @import 'tailwindcss';
 
-:root {
-  --player1: #c2593c;
-  --player2: #dbb057;
-  --player1-light: #e8a48f;
-  --player2-light: #f0d9a8;
-  --board-bg: #1a1a2e;
-  --cell-empty: #2d2d44;
+@theme {
+  --color-app-bg: #323232;
 }
