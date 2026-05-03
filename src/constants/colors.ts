@@ -10,3 +10,9 @@ export const COLORS: Record<number, string> = {
   1: '#D54117',
   2: '#EBB441',
 };
+
+// Nombres de los jugadores.
+export const PLAYER_NAMES: Record<number, string> = {
+  1: 'Jugador 1',
+  2: 'Jugador 2',
+};
