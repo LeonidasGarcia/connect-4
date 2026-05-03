@@ -64,6 +64,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
+  // TODO: Replace with WebSocket call to server
+  // When connected to server, makeMove should emit 'make_move' event
+  // and let the server handle: gravity, turn switching, win detection, scoring
   makeMove: (col: number) => {
     const { board, currentPlayerId } = get();
 
